@@ -181,7 +181,11 @@ int main()
             else
             {
                 string msg = "42[\"manual\",{}]";
-                ws->send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#ifdef _MSC_VER      
+                ws->send(msg.data(), msg.length(), uWS::OpCode::TEXT); //vs
+#else
+                ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT); //gcc
+#endif
             }
         }  // end websocket message if
     }); // end h.onMessage
@@ -196,14 +200,18 @@ int main()
     });
 
 #ifdef _MSC_VER      
-    h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER>* ws, int code, char *message, size_t length)
-#else
-    h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) //gcc
-#endif
+    h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER>* ws, int code, char *message, size_t length) //vs
     {
         ws->close();
         std::cout << "Disconnected" << std::endl;
     });
+#else
+    h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) //gcc
+    {
+        ws.close();
+        std::cout << "Disconnected" << std::endl;
+    });
+#endif
 
     int port = 4567;
     auto host = "127.0.0.1";
