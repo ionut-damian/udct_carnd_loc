@@ -55,7 +55,7 @@ int main()
 
 #ifdef _MSC_VER    
     h.onMessage([&pf, &map, &delta_t, &sensor_range, &sigma_pos, &sigma_landmark](uWS::WebSocket<uWS::SERVER>* ws, char *data, size_t length, uWS::OpCode opCode) //vs
-#elif
+#else
     h.onMessage([&pf,&map,&delta_t,&sensor_range,&sigma_pos,&sigma_landmark] (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) //gcc
 #endif
     {
@@ -172,7 +172,7 @@ int main()
 
 #ifdef _MSC_VER      
                     ws->send(msg.data(), msg.length(), uWS::OpCode::TEXT); //vs
-#elif
+#else
                     ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT); //gcc
 #endif
 
@@ -188,7 +188,7 @@ int main()
 
 #ifdef _MSC_VER      
     h.onConnection([&h](uWS::WebSocket<uWS::SERVER>* ws, uWS::HttpRequest req) //vs
-#elif
+#else
     h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) //gcc
 #endif
     {
@@ -197,7 +197,7 @@ int main()
 
 #ifdef _MSC_VER      
     h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER>* ws, int code, char *message, size_t length)
-#elif
+#else
     h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) //gcc
 #endif
     {
