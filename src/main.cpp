@@ -44,7 +44,11 @@ int main()
 
     // Read map data
     Map map;
+#ifdef _MSC_VER    
     if (!read_map_data("../../data/map_data.txt", map))
+#else
+    if (!read_map_data("../data/map_data.txt", map))
+#endif
     {
         std::cout << "Error: Could not open map file" << std::endl;
         return -1;
