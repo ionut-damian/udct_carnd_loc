@@ -15,6 +15,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include <float.h>
 
 #include "helper_functions.h"
 
