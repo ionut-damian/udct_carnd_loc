@@ -53,10 +53,12 @@ int main()
     // Create particle filter
     ParticleFilter pf;
 
-    //h.onMessage([&pf,&map,&delta_t,&sensor_range,&sigma_pos,&sigma_landmark] (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) //gcc
+#ifdef _MSC_VER    
     h.onMessage([&pf, &map, &delta_t, &sensor_range, &sigma_pos, &sigma_landmark](uWS::WebSocket<uWS::SERVER>* ws, char *data, size_t length, uWS::OpCode opCode) //vs
+#elif
+    h.onMessage([&pf,&map,&delta_t,&sensor_range,&sigma_pos,&sigma_landmark] (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) //gcc
+#endif
     {
-
         // "42" at the start of the message means there's a websocket message event.
         // The 4 signifies a websocket message
         // The 2 signifies a websocket event
@@ -72,6 +74,8 @@ int main()
 
                 if (event == "telemetry")
                 {
+                    //printf("event: %s\n", s.c_str());
+
                     // j[1] is the data JSON object
                     if (!pf.initialized())
                     {
@@ -80,7 +84,7 @@ int main()
                         double sense_y = std::stod(j[1]["sense_y"].get<string>());
                         double sense_theta = std::stod(j[1]["sense_theta"].get<string>());
 
-                        printf("init\n");
+                        //printf("init\n");
                         pf.init(sense_x, sense_y, sense_theta, sigma_pos);
                     }
                     else
@@ -90,7 +94,7 @@ int main()
                         double previous_velocity = std::stod(j[1]["previous_velocity"].get<string>());
                         double previous_yawrate = std::stod(j[1]["previous_yawrate"].get<string>());
 
-                        printf("predict\n");
+                        //printf("predict\n");
                         pf.prediction(delta_t, sigma_pos, previous_velocity, previous_yawrate);
                     }
 
@@ -124,9 +128,9 @@ int main()
                     }
 
                     // Update the weights and resample
-                    printf("update\n");
+                    //printf("update\n");
                     pf.updateWeights(sensor_range, sigma_landmark, noisy_observations, map);
-                    printf("resample\n");
+                    //printf("resample\n");
                     pf.resample();
 
                     // Calculate and output the average weighted error of the particle 
@@ -164,10 +168,13 @@ int main()
                     auto msg = "42[\"best_particle\"," + msgJson.dump() + "]";
                     // std::cout << msg << std::endl;
 
-                    printf("msg: %s\n", msg.c_str());
+                    //printf("msg: %s\n", msg.c_str());
 
-                    //ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT); //gcc
+#ifdef _MSC_VER      
                     ws->send(msg.data(), msg.length(), uWS::OpCode::TEXT); //vs
+#elif
+                    ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT); //gcc
+#endif
 
                 }  // end "telemetry" if
             }
@@ -179,14 +186,20 @@ int main()
         }  // end websocket message if
     }); // end h.onMessage
 
-    //h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) //gcc
+#ifdef _MSC_VER      
     h.onConnection([&h](uWS::WebSocket<uWS::SERVER>* ws, uWS::HttpRequest req) //vs
+#elif
+    h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) //gcc
+#endif
     {
         std::cout << "Connected!!!" << std::endl;
     });
 
-    //h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) //gcc
+#ifdef _MSC_VER      
     h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER>* ws, int code, char *message, size_t length)
+#elif
+    h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) //gcc
+#endif
     {
         ws->close();
         std::cout << "Disconnected" << std::endl;

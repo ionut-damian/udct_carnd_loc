@@ -58,16 +58,7 @@ public:
      */
     void prediction(double delta_t, double std_pos[], double velocity,
         double yaw_rate);
-
-    /**
-     * dataAssociation Finds which observations correspond to which landmarks
-     *   (likely by using a nearest-neighbors data association).
-     * @param predicted std::vector of predicted landmark observations
-     * @param observations std::vector of landmark observations
-     */
-     //void dataAssociation(std::std::vector<LandmarkObs> predicted, std::std::vector<LandmarkObs>& observations);
-    void dataAssociation(const Map &map_landmarks, std::vector<LandmarkObs>& observations);
-
+    
     /**
      * updateWeights Updates the weights for each particle based on the likelihood
      *   of the observed measurements.

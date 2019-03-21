@@ -49,7 +49,6 @@ struct ground_truth
 struct LandmarkObs
 {
     int id;     // Id of matching landmark in the map.
-    Map::single_landmark_s* association;     // pointer to map landmark
     double x;   // Local (vehicle coords) x position of landmark observation [m]
     double y;   // Local (vehicle coords) y position of landmark observation [m]
 };
