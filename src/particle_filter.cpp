@@ -98,7 +98,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
             //associate each observation with a landmark using nearest neighbour
             double min_dist = DBL_MAX;
-            Map::single_landmark_s* landmark = NULL;
+            Map::single_landmark_s bastLandmark;
 
             std::vector<Map::single_landmark_s>::const_iterator mark = map_landmarks.landmark_list.begin();
             while (mark != map_landmarks.landmark_list.end())
@@ -107,14 +107,14 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
                 if (distance < min_dist)
                 {
                     min_dist = distance;
-                    landmark = mark._Ptr;
+                    bastLandmark = *mark;
                 }
                 mark++;
             }
-            obs_map.id = landmark->id_i;
+            obs_map.id = bastLandmark.id_i;
 
             //compute weight
-            weight *= multivar_gauss(obs_map.x, obs_map.y, landmark->x_f, landmark->y_f, std_landmark[0], std_landmark[1]);
+            weight *= multivar_gauss(obs_map.x, obs_map.y, bastLandmark.x_f, bastLandmark.y_f, std_landmark[0], std_landmark[1]);
             
             //associate particle with observations for visualisation purposes
             associations.push_back(obs_map.id);
