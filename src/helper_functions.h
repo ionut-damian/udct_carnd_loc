@@ -9,8 +9,6 @@
 #ifndef HELPER_FUNCTIONS_H_
 #define HELPER_FUNCTIONS_H_
 
-#include "Eigen/Dense"
-
 #include <math.h>
 #include <fstream>
 #include <sstream>
@@ -280,23 +278,6 @@ inline double multivar_gauss(double x, double y, double ux, double uy, double si
     double p = (1.0 / (2 * M_PI*sigx*sigy));
 
     return p * e;
-}
-
-inline Eigen::Vector3d transform(Eigen::Vector3d v, double x, double y, double theta, bool reverse)
-{
-    //build transformation matrix
-    Eigen::Rotation2D<double> R(theta);
-    Eigen::Vector3d T(x, y, 1);
-
-    Eigen::Matrix3d Trans; // Your Transformation Matrix
-    Trans.setIdentity();
-    Trans.block<2, 2>(0, 0) = R.matrix();
-    Trans.rightCols<1>() = T;
-
-    if (!reverse)
-        return Trans * v;
-    else
-        return Trans.inverse() * v;
 }
 
 #endif  // HELPER_FUNCTIONS_H_
